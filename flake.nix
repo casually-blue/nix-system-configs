@@ -27,5 +27,6 @@
 	  inherit inputs system;
 	}
       );
+
     };
 }

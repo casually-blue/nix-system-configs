@@ -1,7 +1,3 @@
-# Edit this configuration file to define what should be installed on
-# your system.  Help is available in the configuration.nix(5) man page
-# and in the NixOS manual (accessible by running ‘nixos-help’).
-
 { config, lib, pkgs, inputs, ... }:
 {
   nix.extraOptions = ''
@@ -9,13 +5,16 @@
   '';
 
   # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.loader = {
+	systemd-boot.enable = true;
+  	efi.canTouchEfiVariables = true;
+  	efi.efiSysMountPoint = "/boot/efi";
+  };
 
-  networking.hostName = "nixos"; # Define your hostname.
-
-  networking.networkmanager.enable = true;
+  networking = {
+	hostName = "nixos"; # Define your hostname.
+  	networkmanager.enable = true;
+  };
 
   # Set your time zone.
   time.timeZone = "America/Chicago";
@@ -24,31 +23,36 @@
   i18n.defaultLocale = "en_US.utf8";
 
   # Enable the X11 windowing system.
-  services.xserver.enable = true;
+  services = {
+	xserver = {
+		enable = true;
+	
+  		# Enable the Cinnamon Desktop Environment.
+		displayManager = {
+			lightdm.enable = true;
+			cinnamon.enable = true;
+		};
 
-  # Enable the Cinnamon Desktop Environment.
-  services.xserver.displayManager.lightdm.enable = true;
-  services.xserver.desktopManager.cinnamon.enable = true;
+  		# Configure keymap in X11
+		layout = "us";
+		xkbVariant = "";
+  	};
 
-  # Configure keymap in X11
-  services.xserver = {
-    layout = "us";
-    xkbVariant = "";
+  	# Enable CUPS to print documents.
+  	printing.enable = true;
+
+	pipewire = {
+    		enable = true;
+    		alsa.enable = true;
+    		alsa.support32Bit = true;
+    		pulse.enable = true;
+	};
   };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
 
   # Enable sound with pipewire.
   sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.admin = {
@@ -81,5 +85,5 @@
     discord
   ];
 
-  system.stateVersion = "22.05"; # Did you read the comment?
+  system.stateVersion = "22.05";
 }
